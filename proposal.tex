@@ -11,7 +11,7 @@
 %\usepackage{hyperref}
 %\usepackage{subcaption}
 %\usepackage{subfigure}
-%\usepackage{url}
+\usepackage{url}
 
 %\newcommand{\bfnull}{\textbf{null}}
 
@@ -31,6 +31,7 @@
 High-level overview of topic and introduction of problem statement: Warlight AI Challenge 2.
 
 \subsection{Problem Statement}\label{sec:problem}
+Seeking to develop a robust planner for the Warlight AI Challenge 2 \cite{warlight}.
 Describe rules of Warlight game (our bot vs one opponent, random map, fog of war, standard scoring and troop allocation, no cards).
 
 \subsection{Previous Work}\label{sec:previous}
@@ -46,13 +47,14 @@ What is significance - Application of theoretical concepts to interesting game (
 High-level description of approach.
 
 \subsection{Hypothesis}\label{sec:hypothesis}
-We think a Refinement Acting Engine (RAE) will fit well into this structure and application.
+We think a Refinement Acting Engine (RAE), SeRPE, or HTN (not sure which) will fit well into this structure and application.
 
 \subsection{Process}\label{sec:process}
-Describe how we plan to apply the RAE to this problem. 
+Describe how we plan to apply the RAE/SeRPE/HTN solution to this problem. 
 High-level description of implementation. 
 Evaluation will be via implementation and simulation (game engine).
 Metric is (1) score compared to other bots and/or (2) score of each of our own implementations.
+Maybe implement a few planners and compare performance against one another.
 
 %
 \section{Project Management}\label{sec:management}
@@ -72,8 +74,8 @@ Gantt chart with milestones and dates.
 Summary of problem and intended approach.
 
 % References 
-%\bibliographystyle{plain}
-%\bibliography{references}
+\bibliographystyle{plain}
+\bibliography{references}
 
 % End document
 \end{document}
