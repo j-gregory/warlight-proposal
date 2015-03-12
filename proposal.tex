@@ -45,46 +45,41 @@ What is significance - Application of theoretical concepts to interesting game (
 
 %
 \section{Technical Approach}\label{sec:approach}
-High-level description of approach.
+Our approach for designing a planner for the Warlight AI Challenge 2 is to implement the basic UCT algorithm and then, time permitted, improve the performance of the algorithm by making different modifications.
+
 
 \subsection{Hypothesis}\label{sec:hypothesis}
-We think a Refinement Acting Engine (RAE), SeRPE, or HTN (not sure which) will fit well into this structure and application.
+We believe that the Monte Carlo-based UCT algorithm will enable the search of different applicable moves in the fast-paced, time-limited game of the Warlight AI Challenge 2. We also hypothesize that, due to the strict time constraint enforced by the game engine, we will be required to modify the UCT algorithm to expedite the search through the game tree.  By making these modifications, we feel that we can make intelligent decisions in each turn that eventually lead to winning the game.
 
 \subsection{Process}\label{sec:process}
-Our goal is to write the best possible AI agent algorithm for RISK game. In addition of the attributes of the classic RISK game, one of the constraints “fog of war” adds yet another dimension to the probabilistic nature of the game. The game is actually a platform of competing AI algorithms (written by other AI enthusiasts), thus the goal is to write more well thought, comprehensive and yet faster algorithm than other entrees.
+The general strategy for the planning algorithm is to acquire regions in a manner by which power is gained quickly while always remaining tactically flexible so as to starve the opponent from in-game advantages. Such a planner must be adversarial in nature, robust enough to adapt to different counter strategies, efficient enough to plan quickly, and adhere to the constraints defined by the games rules.
 
-Few constraints imposed by the game itself and by the game engine are : fog of war, time-limit of 500ms each turn, troop concentration can attack one region at most per turn and after each attack or transfer at least 1 troop must be left behind each region of origin. Due to the imposed constraints of the engine, any successful AI agent must successfully address the balance between run time speed vs algorithmic analysis completeness as well as resolving exploration-exploitation nature of the RISK game. Because the game itself is elementally adversarial with a lot of demanding sub components; we have decided to take hybrid approach between MAXMINI , UCT & domain specific algorithm within a hierarchical planning framework.
+The various constraints in the Warlight AI Challenge 2 primarily dictate how we will approach developing a planner. First, the game provides each player with a $10$ second timebank that ultimately limits one from planning extensively in each turn.  Additionally, this game increases the difficulty of the original Risk game by introducing the concept of fog of war - that is, a player can only observe regions that are immediately adjacent to their own regions. This incorporates a level of uncertainty into the game that must be met with a probabilistic planner instead of a deterministic one. As a result of these constraints imposed by the game engine, we desire an algorithm that balances planning performance with run time; otherwise, we will run out of time, never make a move, and lose the game. 
 
-The general strategy for the proxy AI agent is to acquire regions in manner by which it gets stronger while being tactically flexible enough to starve the opponent from in-game advantages. Such planner needs to be adversarial in nature, hierarchical in construction, efficient and robust enough to survive game’s built-in rule and constraints. At the very high level, we believe an implantation of MAXMINI algorithm is a good candidate.
+From our research, classical planning techniques that exhaustively explore the entire state space are not applicable to this problem because of the time required to find an optimal plan. Instead, we propose to use the Monte-Carlo-based UCT algorithm.  First, we plan on implementing the basic UCT algorithm so that we can generate a sensible plan each turn for a single region in our possession.  Next, we plan to extend this implementation so that we will execute a new instance of the UCT algorithm for every region that contains more than one of our troops.  In other words, regions that we own and have the ability to attack or transfer will have separate game trees. We will simulate the game for each game tree simultaneously using threads, initially disregarding any time constraint, and produce a set of the best moves, each with some probability $p_{i}$. Note, due to the nature of the UCT algorithm, we will not produce an optimal solution, but rather a solution with a certain probability of success, which we can apply some metric to determine the quality of the plan of actions. We believe we are able to evaluate each region independently because the attack and transfer commands in a game are independent. We plan to initially evaluate the UCT algorithm without enforcing a time constratint so that we can characterize the performance of the algorithm completely and determine an upper bound for the run time required to produce all possible commands. 
 
-We believe the task is essentially a large state-space problem that will involve making Markovian decisions. Naturally a Monte-Carlo based approach was considered initially but due to lack of full visibility of the state space, the UCT is preferred over vanilla Monte-Carlo for low level planning & simulation.
+Depending on the amount of time required to traverse the entire game tree in a single instance of the UCT algorithm, we may be required to implement some methods for speeding up the search. One possible method we are considering is the concept of a zone for the purposes of more efficient simulation generation.  We define a zone to be a collection of regions where each region is a neighbor to at least one region with the same owner and at least one region with an opposing owner.  From this definition we can develop a strategy for quickly identifying whether it is intelligent to attack an opponent by comparing the total number of troops in our zone versus the opponent's zone.  In the event an attack is not advised, substantial processing time will be saved by reducing the instances of the UCT algorithm.  An additional modification we are contemplating, provided there is sufficient time in the semester, is the incorporation of a minimax approach to evaluate our moves and the opponent's moves.  Also, we may try prioritizing actions based on the probability of success, prioritizing certain events that may lead to more promising future moves consistent with our strategy, and different thresholds for limiting the depth in which UCT explores a game tree. The specific details of these modifications will be determined during our development and testing tasks.
 
-||| Shameless Copy ||| We plan to incorporate the UCT algorithm as an initial starting point for a planner. We think this will work well because of the time constraint. We plan to evaluate our implementation, first ignoring the time constraint so that we can confirm correctness and evaluate performance. At latter stage after characterizing the performance of the algorithm, we plan to make modifications such that the planner performs well with the addition of the timer constraint. As of right now, these modifications include the notion of zones (cluster of regions) for more efficient simulation generation and the MAXMINI algorithm for enhance evaluation of individual simulation instances. We will simulate several different approaches that incorporate different modifications and compare the performance for each variant based on the number of games won as well as the required rate to win a game (in other words rounds needed divided by total rounds).
+In terms of evaluation, we will simulate several different approaches that incorporate as many modifications as time permits.  Each solution will be simulated in a large number of trials, each in a randomly generated map, and then the performance will be assessed based on the number of games won as well as the rate at which the game was won.  In this case, the rate of winning a game is defined as the number of rounds required to win divided by the total number of rounds in the game. The Warlight AI Challenge 2 also provides a leaderboard that indicates the user's with the best performing algorithms. At a high-level We plan to compare the performance of our approach with the leaders in the challenge.
 
-If runtime becomes an issue then further modification to the approach may involve : prioritized actions, re-prioritized events, constant depth for UCT tree generation e.t.c. These details will be explored during development and debugging stage.
+Hypothetically, the proposed approach could produce largely varied results and is possibly dependent on the size of the map or the complexity of the opponent's algorithm. We seek to characterize the overall performance as it relates to these potential dependencies.  Our analysis and findings will be detailed in final report and presentation.
 
-The look ahead of possible actions are performed by UCT to a level of depth allowed by time-constraint. Intuitively optimal solution due to game constraint (ex: fog of war) is thought to be unachievable. The motivation is to create near-optimal solution.
-
-Any domain specific algorithm mixed within this hybrid approach will be a purely algorithmic translation of the author’s bias towards particular preferred style of playing this game
-
-Essential elements such as parsing routines as sensor/actuator platform will generate commands for the engine, events, create/update sate variables and possibly some book-keeping resources such as look-up tables (to be used by probabilistic routines) will also need to be developed. State variables, tasks and events will work as the  communication scheme between each level of this hierarchical adversarial planner.
-
-Hypothetically the proposed approach could produce mixed result and is subjected to: size of map, competence of opponent’s algorithm. The final approach and detailed mechanism is subjected to change. The effectiveness of the proposed algorithm will be bench marked and ranked by other competing algorithms also submitted for the same gaming platform.
+%Essential elements such as parsing routines as sensor/actuator platform will generate commands for the engine, events, create/update sate variables and possibly some book-keeping resources such as look-up tables (to be used by probabilistic routines) will also need to be developed. State variables, tasks and events will work as the  communication scheme between each level of this hierarchical adversarial planner.
 
 
 %
 \section{Project Management}\label{sec:management}
-The main tasks of this project include implementing the UCT algorithm, conducting simulations, and evaluating the generated data so that we can publish our results in a report and a presentation. 
+The main tasks for this project include implementing the UCT algorithm, conducting simulations, and evaluating the generated data so that we can publish our results in a report and a presentation. 
 
 \subsection{Tasks}\label{sec:tasks}
-There are seven main tasks required to successfully develop a planner that is capable of winning a game in the Warlight AI Challenge 2.  The first, which we have already completed, is a literature review of the UCT algorithm, its variants, and its application to the planning of games involving artificial intelligence. The next task is formulating the problem in a manner that is compatible with our proposed approach. With a concrete understanding for a possible solution, the next task is to implement the basic UCT algorithm.  The next two tasks consist of testing, modifying and improving our implementation to enhance the performance of our solution.  A simulation and evaluation of our algorithm is required to determine how well it performs compared to other strategies. Finally, we will present our results in a report and a presentation.  These tasks, with their respective tentative deadlines and durations are summarized in Table~\ref{tab:deadlines} and Figure 1. %~\ref{fig:gantt}.
+There are seven main tasks required to successfully develop a planner that is capable of winning a game in the Warlight AI Challenge 2.  The first, which we have already completed, is a literature review of the UCT algorithm, its variants, and its application to the planning of games involving artificial intelligence. The next task is formulating the problem in a manner that is compatible with our proposed approach. With a concrete understanding for a possible solution, the next task is to implement the basic UCT algorithm.  The next two tasks consist of testing, modifying and improving our implementation to enhance the performance of our solution.  A simulation and evaluation of our algorithm is required to determine how well it performs compared to other strategies. Finally, we will present our results in a report and a presentation.  These tasks, with their respective tentative target dates and durations are summarized in Table~\ref{tab:deadlines}.
 
 %
-\begin{table}[tbp]
+\begin{table}[htbp]
   \centering
   \begin{tabular}{|c|c|}
     \hline
-    \emph{Task} & \emph{Deadline} \\ 
+    \emph{Task} & \emph{Target Date} \\ 
     \hline
     Literature Review & March 9, 2015 \\ \hline
     Problem Formulation & March 16, 2015 \\ \hline
@@ -94,27 +89,30 @@ There are seven main tasks required to successfully develop a planner that is ca
     Simulation and Evaluation & April 27, 2015 \\ \hline
     Write Report and Presentation & May 2, 2015 \\ \hline
   \end{tabular}
-  \caption{Table of deadlines.}
+  \caption{Table of project tasks and target dates for completing each task.}
   \label{tab:deadlines}
 \end{table}
-
 %
-\begin{figure}[tbp]
-  \centering
-  \includegraphics[width=0.95\columnwidth]{gantt_chart}
-  \label{fig:gantt}
-  \caption{Gantt chart}
-\end{figure}
 
 \subsection{Assignments}\label{sec:assignments}
-Divide and conquer tasks, WAR code, etc.
+All three group members will be responsible for contributing to the problem formulation. This ensures that everyone in the group fully understands both the problem at hand and the proposed solution.  Jason Gregory and Kamruzzaman Quddus will work together to implement the proposed UCT algorithm and its modifications.  Moshe Katz will incrementally test the team's implementation as the code is being written to ensure correct functionality and then collect data by executing numerous simulations. The group, as a whole, will collaboratively evaluate the result, develop a thorough analysis, and create the paper and presentation.
+
 
 \subsection{Schedule}\label{sec:schedule}
-Gantt chart with milestones and dates.
+Figure~\ref{fig:schedule} presents our tentative schedule for completing this project during the 2015 Spring semester. Note that we intend on testing our implementation as we develop it so that we can parallelize our efforts and have more time for simulation and evaluation.
+
+%
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\columnwidth]{gantt_chart}
+  \caption{Tentative schedule for completing each task. Note, red boxes indicate deliverables that will be submitted to the professor.}
+  \label{fig:schedule}
+\end{figure}
+
 
 %
 \section{Conclusions}\label{sec:conclusions}
-Summary of problem and intended approach.
+In this proposal we present our anticipated efforts for developing a probabilistic planner whose goal is to consistently win games in the Warlight AI Challenge 2. On the surface, this toy problem may appear to have little value as it seems inapplicable to real-world problems; however, upon further analysis one immediately sees the expected contributions from our technical approach.  To our knowledge, this will be the first appliation of the UCT algorithm to Risk and its variant Warlight. 
 
 % References 
 \bibliographystyle{plain}
