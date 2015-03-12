@@ -51,11 +51,26 @@ High-level description of approach.
 We think a Refinement Acting Engine (RAE), SeRPE, or HTN (not sure which) will fit well into this structure and application.
 
 \subsection{Process}\label{sec:process}
-Describe how we plan to apply the RAE/SeRPE/HTN solution to this problem. 
-High-level description of implementation. 
-Evaluation will be via implementation and simulation (game engine).
-Metric is (1) score compared to other bots and/or (2) score of each of our own implementations.
-Maybe implement a few planners and compare performance against one another.
+Our goal is to write the best possible AI agent algorithm for RISK game. In addition of the attributes of the classic RISK game, one of the constraints “fog of war” adds yet another dimension to the probabilistic nature of the game. The game is actually a platform of competing AI algorithms (written by other AI enthusiasts), thus the goal is to write more well thought, comprehensive and yet faster algorithm than other entrees.
+
+Few constraints imposed by the game itself and by the game engine are : fog of war, time-limit of 500ms each turn, troop concentration can attack one region at most per turn and after each attack or transfer at least 1 troop must be left behind each region of origin. Due to the imposed constraints of the engine, any successful AI agent must successfully address the balance between run time speed vs algorithmic analysis completeness as well as resolving exploration-exploitation nature of the RISK game. Because the game itself is elementally adversarial with a lot of demanding sub components; we have decided to take hybrid approach between MAXMINI , UCT & domain specific algorithm within a hierarchical planning framework.
+
+The general strategy for the proxy AI agent is to acquire regions in manner by which it gets stronger while being tactically flexible enough to starve the opponent from in-game advantages. Such planner needs to be adversarial in nature, hierarchical in construction, efficient and robust enough to survive game’s built-in rule and constraints. At the very high level, we believe an implantation of MAXMINI algorithm is a good candidate.
+
+We believe the task is essentially a large state-space problem that will involve making Markovian decisions. Naturally a Monte-Carlo based approach was considered initially but due to lack of full visibility of the state space, the UCT is preferred over vanilla Monte-Carlo for low level planning & simulation.
+
+||| Shameless Copy ||| We plan to incorporate the UCT algorithm as an initial starting point for a planner. We think this will work well because of the time constraint. We plan to evaluate our implementation, first ignoring the time constraint so that we can confirm correctness and evaluate performance. At latter stage after characterizing the performance of the algorithm, we plan to make modifications such that the planner performs well with the addition of the timer constraint. As of right now, these modifications include the notion of zones (cluster of regions) for more efficient simulation generation and the MAXMINI algorithm for enhance evaluation of individual simulation instances. We will simulate several different approaches that incorporate different modifications and compare the performance for each variant based on the number of games won as well as the required rate to win a game (in other words rounds needed divided by total rounds).
+
+If runtime becomes an issue then further modification to the approach may involve : prioritized actions, re-prioritized events, constant depth for UCT tree generation e.t.c. These details will be explored during development and debugging stage.
+
+The look ahead of possible actions are performed by UCT to a level of depth allowed by time-constraint. Intuitively optimal solution due to game constraint (ex: fog of war) is thought to be unachievable. The motivation is to create near-optimal solution.
+
+Any domain specific algorithm mixed within this hybrid approach will be a purely algorithmic translation of the author’s bias towards particular preferred style of playing this game
+
+Essential elements such as parsing routines as sensor/actuator platform will generate commands for the engine, events, create/update sate variables and possibly some book-keeping resources such as look-up tables (to be used by probabilistic routines) will also need to be developed. State variables, tasks and events will work as the  communication scheme between each level of this hierarchical adversarial planner.
+
+Hypothetically the proposed approach could produce mixed result and is subjected to: size of map, competence of opponent’s algorithm. The final approach and detailed mechanism is subjected to change. The effectiveness of the proposed algorithm will be bench marked and ranked by other competing algorithms also submitted for the same gaming platform.
+
 
 %
 \section{Project Management}\label{sec:management}
