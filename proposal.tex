@@ -29,19 +29,104 @@
 \abstract{Abstract goes here.}
 
 \section{Introduction}\label{sec:intro}
-High-level overview of topic and introduction of problem statement: Warlight AI Challenge 2.
+\subsection{AI in Games}\label{aiingames}
+Although there are many major commercial fields which benefit from improvements
+in Artificial Intelligence, one of the largest research areas in the field is
+AI's application to games.  From the 1951 debut of Artificially Intelligent bots
+for Nim \cite{nim}, checkers, and chess \cite{checkerschess}, to Deep Blue's 1997
+defeat of chess grandmaster Garry Kasparov, and continuing to today's sophisticated
+First-person-shooter adversaries, the impact and importance of AI in gaming as a
+tool for understanding and furthering AI techniques for the real world has cannot
+be overstated.
+
+Despite all of this work, there still remain many "open problems" in game AI
+design.  Many games still use AI bots that are quite naive, and some games have
+not yet been determined to be winnable by a computer player. To encourage continued
+research and development of game AI, some game makers occasionally run competitions
+for developing new AI bots to play their games.
+
+We are developing a bot to compete in the Warlight AI Challenge 2 \cite{warlight}.
+The goal of this competition is to build a bot that can play (and, of course, can
+win) Warlight, a RISK-style game.
 
 \subsection{Problem Statement}\label{sec:problem}
-Seeking to develop a robust planner for the Warlight AI Challenge 2 \cite{warlight}.
-Describe rules of Warlight game (our bot vs one opponent, random map, fog of war, standard scoring and troop allocation, no cards).
+We are developing an AI planner for the Warlight AI Challenge 2.  To aid those who
+are already familiar with RISK, we first describe the gameplay mechanics of 
+RISK,\footnote{While a full description of the rules of RISK would be too long to 
+include here, the basics described should be enough to understand the general 
+gameplay.  The reader is directed to the printed rules document found in the game 
+box for additional details.} then the differences of Warlight.
+
+\subsubsection{RISK}
+At the start of a game, players take turns placing troops on the board to claim
+their territories.  After all territories have been claimed, players place
+additional troops on the board, with the number of additional troops depending on
+the number of game players.  All players choose the same number of territories.
+When only two players are playing, as is the case in the games our bot will play,
+one third of the territories remain neutral, which means that they will only defend
+against attacks from the two players, but they will not attack on their own.
+
+At the beginning of every turn, players receive additional armies to place on the 
+game board.  The number of armies varies based on how many territories the player 
+controls, and includes additional bonus armies if the player controls entire 
+continents or if the player plays any "RISK Cards".  Players place these armies before continuing their turns.  The rest of 
+a player's turn consists of attacking neighboring territories held by opposing 
+troops and/or transferring troops to a neighboring territory held by the player's 
+own troops in order to fortify it. (Only one fortification move may be made per turn, and it must be the last move of the turn.)
+
+When a player attacks another player's territory, the attacker rolls a number of dice, as does the defender.  The dice are compared and the loser of each comparison removes an army token from the territory.  The attacker conquers the territory if the defender's last army is removed from it, in which case the attacker must move some of his troops into the attacked territory.  The attacker also draws a "RISK Card" which can be traded-in in a set of three on a future turn to receive more troops.
+
+\subsubsection{Warlight}
+Warlight has several modifications from the RISK gameplay.  The most significant 
+change is the addition of \textbf{fog of war}, meaning that players can only see 
+their own territories and the territories immediately adjacent to them.  
+Additionally, while RISK is played on a world map that has been divided into 
+(largely arbitrary) territories, Warlight can also be played on custom-designed or 
+randomly-generated maps.  Warlight also has many additional types of cards that can 
+be drawn, including Reinforcement cards (like RISK), Blockade cards, Spy and 
+Surveillance cards, Gift cards, and several other types.
+
+A major factor in developing a strategy for playing Warlight is that a multi-player 
+(human) Warlight game may have many configurable options set by the game host - 
+this makes developing a strategy that covers all game options impossible. Because 
+RISK is usually played on a physical game board, the per-game options are limited 
+to simple "house rules" modifications; for this reason, there are many published 
+RISK strategy guides but but very few guides for Warlight (and guides for Warlight 
+are usually much more vague about specific implementation of the strategies 
+discussed therein \cite{warlightguide}).
+
+\subsubsection{The Warlight AI Challenge 2}
+For the Warlight AI Challenge 2, our bot will play a two-player game against 
+another bot.  The game will be played on a random map, using the standard scoring 
+and troop allocation rules, but not using any cards.
+
+One major game setting is called the \textbf{luck factor}. The luck factor is used 
+in the calculation of how many attacking and defending armies are destroyed.  While 
+the previous Warlight AI Challenge used a luck factor of 100\%, this challenge uses 
+only 16\% so there is a lot less luck and a lot more certainty about the outcome of 
+an attack.
+
+A bot wins the game by destroying all of the armies of the opposing bot.  However, 
+if the turn limit of the game is reached, the game is considered a draw.  The 
+maximum number of turns allowed in a game depends on the size of the map, and is 
+currently set as the number of map regions times 2.5.
 
 \subsection{Previous Work}\label{sec:previous}
 Reference other bots in challenge, publications on risk strategies, etc.
 
 \subsection{Importance and Relevancy}\label{sec:importance}
-What remains - Own implementation of planning algorithm using topics covered in this class.
-Why interesting - Demonstrate topics from class in real-world example.
-What is significance - Application of theoretical concepts to interesting game (and world domination)
+In addition to the obvious goal of winning the AI Challenge, we will use this
+project as a mechanism to learn and practice topics from class and demonstrate
+applying them to a real-world use-case.
+
+Moreover, techniques used for tactical gameplay often have further real-world 
+application for training exercises and simulations of real situations.  This is 
+especially true for algorithms that model adversarial behavior in addition to our 
+own, providing the ability to play out WarGames-style dangerous scenarios in 
+complete safety.\footnote{In fact, the NORAD missile command center was already 
+using the RISK-style AI shown in WarGames in 1979, and there really was an incident
+in which the AI simulation was thought to be a real Soviet attack
+\cite{wargamesreal}.}
 
 %
 \section{Technical Approach}\label{sec:approach}
