@@ -120,7 +120,35 @@ maximum number of turns allowed in a game depends on the size of the map, and is
 currently set as the number of map regions times 2.5.
 
 \subsection{Previous Work}\label{sec:previous}
-Reference other bots in challenge, publications on risk strategies, etc.
+
+There are currently around 200 competition entries from 30 countries written in 
+eleven languages \cite{warlight}.  While we have not yet examined any of our competitors in detail, 
+they are all working toward the same goal as we are of developing an AI bot for 
+this game, and many of them are much farther ahead at this time.
+
+Additional related work comes from the first Warlight AI Challenge.  While the 
+rules of the game for that competition were slightly different, many of the 
+techniques used there will still apply to this challenge, either as examples of 
+successful approaches, or otherwise as examples of what not to try.
+
+There are also many strategy guides that exist for RISK.  However, as discussed 
+above, there is no real complete strategy guide for Warlight.  Given that every 
+game our bot will be playing will be on a completely new random map, many of the 
+normal things found in any strategy guide might not apply to every game, especially 
+the static RISK guide.  Additionally, many common RISK strategies require knowledge 
+of more of the board status than Warlight allows us to have (due to fog of war).
+
+Finally, there are existing AI bots for RISK itself.  While some have been 
+discussed only theoretically, including strategies from MIT \cite{riskmit}, Markov 
+Chains from North Carolina State University \cite{riskncs}, Monte-Carlo (UCT) 
+techniques for territory selection from University of Alberta \cite{riskalb}, and 
+studies of dice-rolls from Elon University \cite{riskelon}, implementations of AI 
+players for RISK have been created an sold in commercial software as early as 1989.  
+While these are also of varying quality - the 1992 release of \textit{WinRisk} for 
+Windows 3.1 was capable of beating an inexpert child player, but not so easily 
+playing against an expert - and most of them are closed-source without any 
+documentation of their algorithms, they are still prior work for creating an AI bot 
+that can play RISK and similarly-structured games.
 
 \subsection{Importance and Relevancy}\label{sec:importance}
 In addition to the obvious goal of winning the AI Challenge, we will use this
