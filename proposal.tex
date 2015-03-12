@@ -19,7 +19,7 @@
 \begin{document}
 
 \title{Towards the Planning of World Domination}
-\author{Jason Gregory, Moshe Katz, \& Kamruzzaman Quddus \\ \{jgregory,mmkatz, kquddus\}@umd.edu}
+\author{Jason Gregory, Moshe Katz, \& Kamruzzaman Quddus \\ \{jgregory, mmkatz, kquddus\}@umd.edu}
 \affil{University of Maryland, College Park, MD}
 \date{\today}
 
@@ -31,28 +31,28 @@
 \section{Introduction}\label{sec:intro}
 \subsection{AI in Games}\label{aiingames}
 Although there are many major commercial fields which benefit from improvements
-in Artificial Intelligence, one of the largest research areas in the field is
-AI's application to games.  From the 1951 debut of Artificially Intelligent bots
+in Artificial Intelligence (AI), one of the largest research areas in the field is
+the application to games.  From the 1951 debut of Artificially Intelligent bots
 for Nim \cite{nim}, checkers, and chess \cite{checkerschess}, to Deep Blue's 1997
 defeat of chess grandmaster Garry Kasparov, and continuing to today's sophisticated
-First-person-shooter adversaries, the impact and importance of AI in gaming as a
-tool for understanding and furthering AI techniques for the real world has cannot
-be overstated.
+first-person-shooter adversaries, the impact and importance of AI in gaming as a
+tool for understanding and furthering AI techniques for application to real world 
+problems cannot be overstated.
 
-Despite all of this work, there still remain many "open problems" in game AI
+Despite all of this work, there still remains many "open problems" in game AI
 design.  Many games still use AI bots that are quite naive, and some games have
 not yet been determined to be winnable by a computer player. To encourage continued
 research and development of game AI, some game makers occasionally run competitions
 for developing new AI bots to play their games.
 
-We are developing a bot to compete in the Warlight AI Challenge 2 \cite{warlight}.
+In this work, We are developing a bot to compete in the Warlight AI Challenge 2 \cite{warlight}.
 The goal of this competition is to build a bot that can play (and, of course, can
 win) Warlight, a RISK-style game.
 
 \subsection{Problem Statement}\label{sec:problem}
-We are developing an AI planner for the Warlight AI Challenge 2.  To aid those who
-are already familiar with RISK, we first describe the game-play mechanics of 
-RISK,\footnote{While a full description of the rules of RISK would be too long to 
+We are developing an AI planner specifically for competing in the Warlight AI Challenge 2.  
+To aid those who are less familiar with RISK, we first describe the game-play mechanics,
+\footnote{While a full description of the rules of RISK would be too long to 
 include here, the basics described should be enough to understand the general 
 game-play.  The reader is directed to the printed rules document found in the game 
 box for additional details.} then the differences of Warlight.
@@ -70,37 +70,37 @@ At the beginning of every turn, players receive additional armies to place on th
 game board.  The number of armies varies based on how many territories the player 
 controls, and includes additional bonus armies if the player controls entire 
 continents or if the player plays any "RISK Cards".  Players place these armies 
-before continuing their turns.  The rest of 
-a player's turn consists of attacking neighboring territories held by opposing 
-troops and/or transferring troops to a neighboring territory held by the player's 
-own troops in order to fortify it. (Only one fortification move may be made per 
-turn, and it must be the last move of the turn.)
+before continuing their turns.  The rest of a player's turn consists of attacking 
+neighboring territories held by opposing troops and/or transferring troops to a 
+neighboring territory held by the player's own troops in order to fortify it. 
+Note, only one fortification move may be made per turn, and it must be the last 
+move of the turn.
 
 When a player attacks another player's territory, the attacker rolls a number of 
 dice, as does the defender.  The dice are compared and the loser of each comparison 
 removes an army token from the territory.  The attacker conquers the territory if 
 the defender's last army is removed from it, in which case the attacker must move 
-some of his troops into the attacked territory.  The attacker also draws a "RISK 
-Card" which can be traded-in in a set of three on a future turn to receive more 
-troops.
+some of his troops into the attacked territory.  If the attacker is succesful in 
+their attack , they draw a "RISK Card" which can be traded-in as sets of three 
+to receive additional troops in a future turn.
 
 \subsubsection{Warlight}
 Warlight has several modifications from the RISK game-play.  The most significant 
-change is the addition of \textbf{fog of war}, meaning that players can only see 
+change is the addition of \emph{fog of war} -- that is, players can only see 
 their own territories and the territories immediately adjacent to them.  
-Additionally, while RISK is played on a world map that has been divided into 
-(largely arbitrary) territories, Warlight can also be played on custom-designed or 
-randomly-generated maps.  Warlight also has many additional types of cards that can 
-be drawn, including Reinforcement cards (like RISK), Blockade cards, Spy and 
-Surveillance cards, Gift cards, and several other types.
+Additionally, while RISK is played on a world map that has been divided into arbitrary 
+territories, Warlight can be played on custom-designed or randomly-generated maps.  
+Warlight also has many additional types of cards that can be drawn, including 
+Reinforcement cards (like RISK), Blockade cards, Spy and Surveillance cards, 
+Gift cards, and several other types.
 
 A major factor in developing a strategy for playing Warlight is that a multi-player 
 (human) Warlight game may have many configurable options set by the game host - 
 this makes developing a strategy that covers all game options impossible. Because 
 RISK is usually played on a physical game board, the per-game options are limited 
 to simple "house rules" modifications; for this reason, there are many published 
-RISK strategy guides but but very few guides for Warlight (and guides for Warlight 
-are usually much more vague about specific implementation of the strategies 
+RISK strategy guides but very few guides for Warlight.  Furthermore, guides for 
+Warlight are usually much more vague about specific implementation of the strategies 
 discussed therein \cite{warlightguide}).
 
 \subsubsection{The Warlight AI Challenge 2}
@@ -108,10 +108,10 @@ For the Warlight AI Challenge 2, our bot will play a two-player game against
 another bot.  The game will be played on a random map, using the standard scoring 
 and troop allocation rules, but not using any cards.
 
-One major game setting is called the \textbf{luck factor}. The luck factor is used 
+One major game setting is called the \emph{luck factor}. The luck factor is used 
 in the calculation of how many attacking and defending armies are destroyed.  While 
-the previous Warlight AI Challenge used a luck factor of 100\%, this challenge uses 
-only 16\% so there is a lot less luck and a lot more certainty about the outcome of 
+the previous Warlight AI Challenge used a luck factor of $100\%$, this challenge uses 
+only $16\%$ so there is a lot less luck and a lot more certainty about the outcome of 
 an attack.
 
 A bot wins the game by destroying all of the armies of the opposing bot.  However, 
@@ -122,8 +122,8 @@ currently set as the number of map regions times 2.5.
 \subsection{Previous Work}\label{sec:previous}
 The largest body of related work is the set of other bots in the current challenge.  
 There are currently around 200 competition entries from 30 countries written in 
-eleven languages \cite{warlight}.  While we have not yet examined any of our competitors in detail, 
-they are all working toward the same goal as we are of developing an AI bot for 
+eleven languages \cite{warlight}.  While we have not yet examined any of our competitors 
+in detail, they are all working toward the same goal as we are of developing an AI bot for 
 this game, and many of them are much farther ahead at this time.
 
 Additional related work comes from the first Warlight AI Challenge.  While the 
@@ -133,30 +133,28 @@ successful approaches, or otherwise as examples of what not to try.
 
 There are also many strategy guides that exist for RISK.  However, as discussed 
 above, there is no real complete strategy guide for Warlight.  Given that every 
-game our bot will be playing will be on a completely new random map, many of the 
-normal things found in any strategy guide might not apply to every game, especially 
-the static RISK guide.  Additionally, many common RISK strategies require knowledge 
-of more of the board status than Warlight allows us to have (due to fog of war).
+game our bot will be playing will be on a completely new random map, and random opponent, 
+many of the typical strategy guides might not apply to every game; this is especially 
+true for the static RISK guide.  Additionally, many common RISK strategies require knowledge 
+of more of the board status than Warlight allows us to have due to fog of war.
 
-Finally, there are existing AI bots for RISK itself.  While some have been 
+Finally, there are existing AI bots for the original RISK game.  While some have been 
 discussed only theoretically, including strategies from MIT \cite{riskmit}, Markov 
 Chains from North Carolina State University \cite{riskncs}, Monte-Carlo (UCT) 
 techniques for territory selection from University of Alberta \cite{riskalb}, and 
 studies of dice-rolls from Elon University \cite{riskelon}, implementations of AI 
-players for RISK have been created an sold in commercial software as early as 1989.  
-While these are also of varying quality - the 1992 release of \textit{WinRisk} for 
-Windows 3.1 was capable of beating an inexpert child player, but not so easily 
-playing against an expert - and most of them are closed-source without any 
-documentation of their algorithms, they are still prior work for creating an AI bot 
-that can play RISK and similarly-structured games.
+players for RISK have been created and sold in commercial software as early as 1989. 
+These solutions are also of varying quality - the 1992 release of \textit{WinRisk} for 
+Windows 3.1 was capable of beating at-best an inexpert child player - and most 
+implementations are closed-source without any documentation of their algorithms.
+%there is still prior work for creating an AI bot that can play RISK and similarly-structured games.
 
 \subsection{Importance and Relevancy}\label{sec:importance}
-In addition to the obvious goal of winning the AI Challenge, we will use this
-project as a mechanism to learn and practice topics from class and demonstrate
-applying them to a real-world use-case.
-
-Moreover, techniques used for tactical game-play often have further real-world 
-application for training exercises and simulations of real situations.  This is 
+In addition to the obvious goal of performing well in the Warlight AI Challenge 2, 
+we will use this project as a mechanism to learn and practice topics from class and 
+demonstrate our ability to apply different techniques to a real-world use-case.
+Moreover, techniques used for tactical game-play often have grounded 
+application for training exercises and simulations of real-world situations.  This is 
 especially true for algorithms that model adversarial behavior in addition to our 
 own, providing the ability to play out WarGames-style dangerous scenarios in 
 complete safety.\footnote{In fact, the NORAD missile command center was already 
